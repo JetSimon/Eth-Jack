@@ -1,3 +1,5 @@
+window.onload = function(){ document.getElementById("app").style.visibility = "hidden"; };
+
 Vue.component('dealer', {
     props: {address:String, toSend:Number},
     data: function () {
@@ -61,11 +63,13 @@ const ethereumButton = document.querySelector('.enableEthereumButton');
 const showAccount = document.querySelector('.showAccount');
 
 ethereumButton.addEventListener('click', () => {
+  document.getElementById("app").style.visibility = "initial";
   getAccount();
+  ethereumButton.style.display = "none";
 });
 
 async function getAccount() {
   const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
   const account = accounts[0];
-  showAccount.innerHTML = account;
+  showAccount.innerHTML = "Your Wallet Address: " + account;
 }
