@@ -1,14 +1,11 @@
-window.addEventListener('load', async () => {
-    if (typeof window.ethereum !== 'undefined') {
-        console.log("METAMASK OK")
-    }
-});
-
 Vue.component('dealer', {
     props: {address:String, toSend:Number},
     data: function () {
-      return { balance:"0", conversion:1
+      return { balance:"0", conversion:1, hasMetaMask:false
       }
+    },
+    beforeCreate(){
+        this.hasMetaMask = typeof window.ethereum !== 'undefined'
     },
     created () {
         this.toSend = "0";
@@ -38,14 +35,17 @@ Vue.component('dealer', {
         }
     },
     template: `
-    <div class="text-center mx-auto">
-      Your Balance    
+    <div>
+        <div v-if="hasMetaMask" class="text-center mx-auto">
+        Your Balance    
 
-      Dealer Address: <input v-model="address" /><br>  
-      Dealer has: {{balance}} ETH ({{balance * conversion}} CAD)
-      <br><br>
-      ETH to send: <input v-model="toSend" /> 
-      <button class="" @click="sendToDealer">Send to Dealer</button>  
+        Dealer Address: <input v-model="address" /><br>  
+        Dealer has: {{balance}} ETH ({{balance * conversion}} CAD)
+        <br><br>
+        ETH to send: <input v-model="toSend" /> 
+        <button class="" @click="sendToDealer">Send to Dealer</button>  
+        </div>
+        <div v-else class="text-center text-5xl text-bold">Install <a href="https://metamask.io/" class="text-red-400">MetaMask</a> to use this!</div>
     </div>
     `
   })
