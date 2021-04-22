@@ -49,7 +49,7 @@ Vue.component('dealer', {
         ETH to send: <input v-model="toSend" /> 
         <button class="" @click="sendToDealer">Send to Dealer</button>  
         </div>
-        <div v-else class="text-center text-5xl text-bold">Install <a href="https://metamask.io/" class="text-red-400">MetaMask</a> to use this!</div>
+        <div v-else class="text-gray-700 text-center text-5xl text-bold">Install <a href="https://metamask.io/" class="text-blue-600">MetaMask</a> to use this!</div>
     </div>
     `
   })
