@@ -1,11 +1,8 @@
 Vue.component('dealer', {
     props: {address:String, toSend:Number},
     data: function () {
-      return { balance:"0", conversion:1, hasMetaMask:false
+      return { balance:"0", conversion:1
       }
-    },
-    beforeCreate(){
-        this.hasMetaMask = typeof window.ethereum !== 'undefined'
     },
     created () {
         this.toSend = "0";
@@ -15,7 +12,12 @@ Vue.component('dealer', {
     updated() {
         this.getBalance()    
     },
-    methods: {
+    computed: {
+        hasMetaMask: function(){
+            return typeof window.ethereum !== 'undefined'
+        }
+    }
+    ,methods: {
         getBalance () {
             ethereum.request({ method: 'eth_getBalance', params: [
                 this.address,
