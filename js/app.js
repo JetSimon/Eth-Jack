@@ -61,7 +61,7 @@ Vue.component('dealer', {
             <div class="block items-center justify-items-center lg:grid gap-10 grid-rows-1 grid-cols-2 pt-20 lg:w-2/3">
 
             <div class="my-24 lg:w-full mx-5 text-center">
-                <div class="truncate text-center flex items-center content-center align-center px-10 py-3 rounded-full shadow-md h-20 text-2xl font-bold text-gray-700">{{balance}} ETH <span class="ml-3 text-gray-300">(\${{balance * conversion}} CAD)</span></div> 
+                <div class="truncate text-center flex items-center content-center align-center px-10 py-3 rounded-full shadow-md h-20 sm:text-sm md:text-2xl font-bold text-gray-700">{{balance}} ETH <span class="ml-3 text-gray-300">(\${{balance * conversion}} CAD)</span></div> 
                 <div class="pt-1 text-blue-600 text-xl font-bold italic tracking-wide">Dealer's Balance</div>
             </div>
 
