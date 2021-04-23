@@ -4,21 +4,41 @@ Vue.component('balance-box', {
     props: ['balance', 'conversion', 'title', 'secondary'],
     template: `
     <div class="my-24 lg:w-full mx-5 text-center">
-        <div class="truncate text-center flex items-center content-center align-center px-10 py-3 rounded-full shadow-md h-20 text-xl font-bold text-gray-700">{{balance.toFixed(8)}} ETH <span class="ml-3 text-gray-300">(\${{(balance * conversion).toFixed(2)}} CAD)</span></div> 
+        <div class="truncate text-center flex items-center content-center align-center px-10 py-3 rounded-full shadow-md h-20 text-xl font-bold text-gray-700">{{Number(balance).toFixed(8)}} ETH <span class="ml-3 text-gray-300">(\${{(Number(balance) * conversion).toFixed(2)}} CAD)</span></div> 
         <div class="pt-1 text-blue-600 text-xl font-bold italic tracking-wide">{{title}}</div>
         <div class="pt-1 text-gray-400 text-md italic tracking-wide">{{secondary}}</div>
     </div>
     `
 })
 
+Vue.component('send-button',{
+    props:["sendTo"],
+    data:function () {return {amount:0}},
+    template: 
+    `
+    <div class="bg-gray-100 rounded-lg py-10 px-10 grid grid-cols-4 shadow mx-auto w-full">
+    <p class="text-gray-500 text-4xl select-none"><span class="hover:text-blue-600">♦</span> ETH</p> <input type="number" class="col-span-2 rounded-lg shadow py-1 px-3 mx-5 text-3xl text-gray-500" v-model="amount" /> 
+    <button class="hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-md shadow text-white text-bold" @click="sendToDealer">Send to Dealer</button>  
+    </div>  
+    `,
+    methods: {
+        sendToDealer () {
+            ethereum.request({ method: 'eth_sendTransaction', params: [{
+                "from": ethereum.selectedAddress,
+                "to": this.sendTo,
+                "value": (this.amount * (10**18)).toString(16),
+              }]})
+        }
+    }
+})
+
 Vue.component('dealer', {
-    props: {address:String, toSend:Number},
+    props: {address:String},
     data: function () {
       return { balance:"0", conversion:1, userBalance:"0"
       }
     },
     created () {
-        this.toSend = "0";
         this.getBalance();
         this.timer = setInterval(this.getBalance(), 10000);
     },
@@ -54,14 +74,6 @@ Vue.component('dealer', {
             fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=CAD').then(response => response.json())
             .then(data => this.conversion = data['CAD']);
         },
-
-        sendToDealer () {
-            ethereum.request({ method: 'eth_sendTransaction', params: [{
-                "from": ethereum.selectedAddress,
-                "to": this.address,
-                "value": (this.toSend * (10**18)).toString(16),
-              }]})
-        }
     },
     template: `
     <div>
@@ -81,10 +93,7 @@ Vue.component('dealer', {
 
             <div class="mx-5 my-20 lg:-my-0">
                 <p class="text-6xl font-bold tracking-wide pb-5 text-gray-700">make a bet</p>
-                <div class="bg-gray-100 rounded-lg py-10 px-10 grid grid-cols-4 shadow mx-auto w-full">
-                    <p class="text-gray-500 text-4xl select-none"><span class="hover:text-blue-600">♦</span> ETH</p> <input class="col-span-2 rounded-lg shadow py-1 px-3 mx-5 text-3xl text-gray-500" v-model="toSend" /> 
-                    <button class="hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-md shadow text-white text-bold" @click="sendToDealer">Send to Dealer</button>  
-            </div>
+                <send-button :sendTo="address"></send-button>
             </div>
             </div>
             </div>
